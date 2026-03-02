@@ -288,7 +288,7 @@ function App() {
       <header className="header">
         <span className="header-icon">☕</span>
         <h1>24hr online workplace</h1>
-        <p className="subtitle">조용히 함께 작업하는 온라인 공간</p>
+        <p className="subtitle">각자의 자리에서 함께 하는 작업 공간</p>
       </header>
 
       {/* Firebase 미설정 안내 */}
