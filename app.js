@@ -431,7 +431,7 @@ function App() {
       <section className="card">
         <div className="card-title">
           <span className="icon">📋</span>
-          안내
+          온라인 작업 공간 사용 안내
         </div>
         <ul className="info-list">
           <li className="info-item">
