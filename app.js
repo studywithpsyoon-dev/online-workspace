@@ -471,7 +471,7 @@ function App() {
 
       {/* 푸터 */}
       <footer className="footer">
-        24hr online workplace
+        24hr online workplace · since 2024
       </footer>
 
       <Toast message={toast} />
