@@ -275,7 +275,17 @@ function App() {
     }
 
     db.ref(`workspace/currentMembers/${myKey}`).remove().then(() => {
-      showToast('퇴실 완료! 수고하셨습니다 ✨');
+      const farewells = [
+        `${displayName}님, 오늘도 수고하셨어요 ✨`,
+        `${displayName}님, 오늘 하루도 잘 보내셨네요! 푹 쉬세요 🌙`,
+        `${displayName}님, 좋은 작업 시간이었어요. 내일 또 만나요 ☕`,
+        `${displayName}님, 오늘도 한 걸음 나아갔어요 ✨`,
+        `${displayName}님, 해낸 만큼 충분해요. 수고하셨습니다 🌿`,
+        `${displayName}님, 오늘의 노력이 내일의 성과가 될 거예요 ✨`,
+        `${displayName}님, 퇴실 완료! 남은 하루도 좋은 시간 보내세요 ☕`,
+        `${displayName}님, 고생 많으셨어요! 리프레시 타임이에요 🌙`,
+      ];
+      showToast(farewells[Math.floor(Math.random() * farewells.length)]);
 
       db.ref('workspace/log').push({
         nickname: displayName,
