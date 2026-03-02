@@ -170,7 +170,7 @@ function App() {
 
   // 입퇴실 기록 리스너 (전체) + 7일 지난 로그 자동 삭제
   useEffect(() => {
-    if (!db) return;
+    if (!db || !user) return;
     const ref = db.ref('workspace/log').orderByChild('timestamp').limitToLast(100);
     const handler = ref.on('value', snap => {
       const data = snap.val() || {};
@@ -187,7 +187,7 @@ function App() {
       setLogs(list);
     });
     return () => ref.off('value', handler);
-  }, []);
+  }, [user]);
 
   // 타이머
   useEffect(() => {
