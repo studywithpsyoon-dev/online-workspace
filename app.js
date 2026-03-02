@@ -351,34 +351,36 @@ function App() {
           </div>
         )}
 
-        {/* 접속자 목록 */}
-        {members.length > 0 ? (
-          <ul className="member-list">
-            {members.map(m => (
-              <li key={m.key} className="member-item">
-                <div className="member-info">
-                  {m.photoURL ? (
-                    <img className="user-bar-avatar" src={m.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 32, height: 32 }} />
-                  ) : (
-                    <div className="member-avatar">{getAvatarEmoji(m.nickname)}</div>
-                  )}
-                  <div>
-                    <div className="member-nickname">
-                      {m.nickname} {m.key === myKey && <span style={{ fontSize: 11, color: 'var(--orange)' }}>(나)</span>}
+        {/* 접속자 목록 (로그인한 사용자만 볼 수 있음) */}
+        {user ? (
+          members.length > 0 ? (
+            <ul className="member-list">
+              {members.map(m => (
+                <li key={m.key} className="member-item">
+                  <div className="member-info">
+                    {m.photoURL ? (
+                      <img className="user-bar-avatar" src={m.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 32, height: 32 }} />
+                    ) : (
+                      <div className="member-avatar">{getAvatarEmoji(m.nickname)}</div>
+                    )}
+                    <div>
+                      <div className="member-nickname">
+                        {m.nickname} {m.key === myKey && <span style={{ fontSize: 11, color: 'var(--orange)' }}>(나)</span>}
+                      </div>
+                      <div className="member-time">{formatTime(m.enteredAt)} 입실</div>
                     </div>
-                    <div className="member-time">{formatTime(m.enteredAt)} 입실</div>
                   </div>
-                </div>
-                <MemberDuration enteredAt={m.enteredAt} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="empty-state">
-            <span className="icon">🌙</span>
-            아직 아무도 없어요. 첫 번째 입실자가 되어보세요!
-          </div>
-        )}
+                  <MemberDuration enteredAt={m.enteredAt} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="empty-state">
+              <span className="icon">🌙</span>
+              아직 아무도 없어요. 첫 번째 입실자가 되어보세요!
+            </div>
+          )
+        ) : null}
 
         {/* Meet 다시 열기 (입실 중일 때만) */}
         {isCheckedIn && (
