@@ -244,7 +244,7 @@ function App() {
       }));
 
       showToast(`${name}님, 환영합니다 ☕`);
-      window.open(MEET_LINK, '_blank');
+      window.open(MEET_LINK, '_blank', 'width=900,height=600,noopener,noreferrer');
 
       db.ref('workspace/log').push({
         nickname: name,
