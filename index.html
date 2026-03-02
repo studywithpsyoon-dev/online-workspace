@@ -86,17 +86,6 @@
       font-weight: 400;
     }
 
-    .header .badge {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 4px 14px;
-      background: var(--orange-soft);
-      color: var(--brown-dark);
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
     /* ========== CARD ========== */
     .card {
       background: #fff;
@@ -155,34 +144,6 @@
     .member-count {
       font-weight: 600;
       color: var(--brown-dark);
-    }
-
-    /* ========== CHECK-IN FORM ========== */
-    .checkin-form {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .checkin-form input {
-      flex: 1;
-      padding: 12px 16px;
-      border: 1.5px solid var(--beige);
-      border-radius: var(--radius-sm);
-      font-size: 15px;
-      font-family: inherit;
-      background: var(--cream);
-      color: var(--text-primary);
-      transition: border-color 0.2s;
-      outline: none;
-    }
-
-    .checkin-form input:focus {
-      border-color: var(--orange);
-    }
-
-    .checkin-form input::placeholder {
-      color: var(--text-light);
     }
 
     .btn {
@@ -329,48 +290,12 @@
       flex-shrink: 0;
     }
 
-    .info-link {
-      color: var(--brown);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-    }
-
-    .info-link:hover { color: var(--brown-dark); }
-
     /* ========== FOOTER ========== */
     .footer {
       text-align: center;
       padding: 32px 0 16px;
       font-size: 13px;
       color: var(--text-light);
-    }
-
-    /* ========== MY STATUS ========== */
-    .my-status {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      background: linear-gradient(135deg, var(--beige), var(--cream));
-      border-radius: var(--radius-sm);
-      margin-bottom: 16px;
-      border: 1.5px solid var(--orange-soft);
-    }
-
-    .my-status-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--brown-dark);
-    }
-
-    .my-status-timer {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--brown-dark);
-      font-variant-numeric: tabular-nums;
     }
 
     /* ========== TOAST ========== */
@@ -488,9 +413,9 @@
       .card { padding: 20px; }
       .header { padding: 32px 0 24px; }
       .header h1 { font-size: 22px; }
-      .checkin-form { flex-direction: column; }
-      .btn { width: 100%; }
-      .my-status { flex-direction: column; gap: 8px; text-align: center; }
+      .user-bar { flex-direction: column; gap: 10px; align-items: stretch; }
+      .user-bar-info { justify-content: center; }
+      .user-bar > div:last-child { display: flex; justify-content: center; gap: 8px; }
     }
   </style>
 </head>
@@ -513,7 +438,6 @@
   };
 
   const MEET_LINK = "https://meet.google.com/mxu-wiqe-xtg";
-  const CALENDAR_LINK = ""; // 구글 캘린더 초대장 링크를 넣어주세요
 
   const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 
@@ -673,17 +597,21 @@
       return () => ref.off('value', handler);
     }, []);
 
-    // 오늘의 활동 로그 리스너
+    // 입퇴실 기록 리스너 (전체) + 7일 지난 로그 자동 삭제
     useEffect(() => {
       if (!db) return;
-      const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-      const ref = db.ref('workspace/log').orderByChild('timestamp').startAt(todayStart).limitToLast(50);
+      const ref = db.ref('workspace/log').orderByChild('timestamp').limitToLast(100);
       const handler = ref.on('value', snap => {
         const data = snap.val() || {};
-        const list = Object.entries(data).map(([key, val]) => ({
-          key, ...val
-        }));
+        const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+        const list = [];
+        Object.entries(data).forEach(([key, val]) => {
+          if (val.timestamp < weekAgo) {
+            db.ref(`workspace/log/${key}`).remove();
+          } else {
+            list.push({ key, ...val });
+          }
+        });
         list.sort((a, b) => b.timestamp - a.timestamp);
         setLogs(list);
       });
@@ -902,7 +830,7 @@
           <section className="card">
             <div className="card-title">
               <span className="icon">📝</span>
-              오늘의 입퇴실 기록
+              입퇴실 기록
             </div>
             <ul className="member-list" style={{ maxHeight: '210px', overflowY: 'auto' }}>
               {logs.map(log => (
