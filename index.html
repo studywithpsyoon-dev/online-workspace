@@ -696,7 +696,8 @@
       const ref = db.ref('workspace/currentMembers');
       const newRef = ref.push();
       const now = Date.now();
-      const data = { nickname: name, enteredAt: now };
+      const photo = photoURL || '';
+      const data = { nickname: name, photoURL: photo, enteredAt: now };
 
       // onDisconnect 설정 (브라우저 종료 시 자동 퇴실)
       newRef.onDisconnect().remove();
@@ -705,6 +706,7 @@
       const autoExitRef = db.ref('workspace/log').push();
       autoExitRef.onDisconnect().set({
         nickname: name,
+        photoURL: photo,
         action: 'exit',
         timestamp: firebase.database.ServerValue.TIMESTAMP
       });
@@ -723,6 +725,7 @@
         // 로그 기록
         db.ref('workspace/log').push({
           nickname: name,
+          photoURL: photo,
           action: 'enter',
           timestamp: now
         });
@@ -744,6 +747,7 @@
 
         db.ref('workspace/log').push({
           nickname: displayName,
+          photoURL: photoURL || '',
           action: 'exit',
           timestamp: Date.now()
         });
@@ -852,7 +856,11 @@
               {members.map(m => (
                 <li key={m.key} className="member-item">
                   <div className="member-info">
-                    <div className="member-avatar">{getAvatarEmoji(m.nickname)}</div>
+                    {m.photoURL ? (
+                      <img className="user-bar-avatar" src={m.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 32, height: 32 }} />
+                    ) : (
+                      <div className="member-avatar">{getAvatarEmoji(m.nickname)}</div>
+                    )}
                     <div>
                       <div className="member-nickname">
                         {m.nickname} {m.key === myKey && <span style={{ fontSize: 11, color: 'var(--orange)' }}>(나)</span>}
@@ -890,12 +898,16 @@
               {logs.map(log => (
                 <li key={log.key} className="member-item" style={{ padding: '10px 16px' }}>
                   <div className="member-info">
-                    <div className="member-avatar" style={{
-                      width: 28, height: 28, fontSize: 12,
-                      background: log.action === 'enter' ? 'var(--green-soft)' : 'var(--orange-soft)'
-                    }}>
-                      {log.action === 'enter' ? '🟢' : '👋'}
-                    </div>
+                    {log.photoURL ? (
+                      <img className="user-bar-avatar" src={log.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 28, height: 28 }} />
+                    ) : (
+                      <div className="member-avatar" style={{
+                        width: 28, height: 28, fontSize: 12,
+                        background: log.action === 'enter' ? 'var(--green-soft)' : 'var(--orange-soft)'
+                      }}>
+                        {log.action === 'enter' ? '🟢' : '👋'}
+                      </div>
+                    )}
                     <div>
                       <span className="member-nickname" style={{ fontSize: 14 }}>
                         {log.nickname}
