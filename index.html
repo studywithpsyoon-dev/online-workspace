@@ -607,6 +607,41 @@
     const displayName = user ? user.displayName : '';
     const photoURL = user ? user.photoURL : '';
 
+    // 새로고침 시 입실 상태 복원
+    useEffect(() => {
+      if (authLoading || !user || !db) return;
+      const saved = sessionStorage.getItem('checkInData');
+      if (!saved) return;
+      try {
+        const data = JSON.parse(saved);
+        const ref = db.ref('workspace/currentMembers');
+        const newRef = ref.push();
+        newRef.onDisconnect().remove();
+        newRef.set({ nickname: data.nickname, photoURL: data.photoURL || '', enteredAt: data.enteredAt }).then(() => {
+          setMyKey(newRef.key);
+          setEnteredAt(data.enteredAt);
+          setIsCheckedIn(true);
+          // 자동 퇴실 로그 예약 (진짜 종료 시)
+          const autoExitRef = db.ref('workspace/log').push();
+          autoExitRef.onDisconnect().set({
+            nickname: data.nickname,
+            photoURL: data.photoURL || '',
+            action: 'exit',
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          });
+          setExitLogRef(autoExitRef);
+          // 새로고침으로 생긴 자동 퇴실 로그 삭제
+          if (data.autoExitKey) {
+            db.ref(`workspace/log/${data.autoExitKey}`).remove();
+          }
+          // sessionStorage에 새 autoExitKey 업데이트
+          sessionStorage.setItem('checkInData', JSON.stringify({
+            ...data, autoExitKey: autoExitRef.key
+          }));
+        });
+      } catch (e) { sessionStorage.removeItem('checkInData'); }
+    }, [authLoading, user]);
+
     // Google 로그인
     const handleGoogleLogin = useCallback(() => {
       if (!auth) return;
@@ -619,6 +654,7 @@
     // 로그아웃
     const handleLogout = useCallback(() => {
       if (isCheckedIn) handleCheckOut();
+      sessionStorage.removeItem('checkInData');
       if (auth) auth.signOut();
     }, [isCheckedIn]);
 
@@ -667,17 +703,6 @@
       }
     }, [isCheckedIn, enteredAt]);
 
-    // 브라우저 닫기/새로고침 시 퇴실
-    useEffect(() => {
-      const handleUnload = () => {
-        if (myKey && db) {
-          // 동기적 퇴실은 불가하므로 onDisconnect에 의존
-        }
-      };
-      window.addEventListener('beforeunload', handleUnload);
-      return () => window.removeEventListener('beforeunload', handleUnload);
-    }, [myKey]);
-
     const showToast = useCallback((msg) => {
       toastKey.current += 1;
       setToast('');
@@ -717,6 +742,11 @@
         setEnteredAt(now);
         setIsCheckedIn(true);
 
+        // sessionStorage에 입실 상태 저장 (새로고침 시 복원용)
+        sessionStorage.setItem('checkInData', JSON.stringify({
+          nickname: name, photoURL: photo, enteredAt: now, autoExitKey: autoExitRef.key
+        }));
+
         showToast(`${name}님, 환영합니다 ☕`);
 
         // Meet 자동 연결
@@ -755,6 +785,7 @@
         setIsCheckedIn(false);
         setMyKey(null);
         setEnteredAt(null);
+        sessionStorage.removeItem('checkInData');
       });
     }, [myKey, displayName, showToast]);
 
