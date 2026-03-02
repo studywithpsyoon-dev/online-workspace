@@ -837,47 +837,26 @@
             </div>
           ) : (
             <div>
-              {/* 로그인된 사용자 정보 */}
+              {/* 로그인 사용자 + 입실/퇴실 */}
               <div className="user-bar">
                 <div className="user-bar-info">
                   {photoURL && <img className="user-bar-avatar" src={photoURL} alt="" referrerPolicy="no-referrer" />}
                   <span style={{ fontWeight: 500 }}>{displayName}</span>
+                  {isCheckedIn && <span style={{ fontSize: 12, color: 'var(--green-dark)' }}>작업 중 {formatDuration(elapsed)}</span>}
                 </div>
-                <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {!isCheckedIn ? (
+                    <button className="btn btn-enter" onClick={handleCheckIn} style={{ padding: '8px 20px', fontSize: 14 }}>
+                      ☕ 입실
+                    </button>
+                  ) : (
+                    <button className="btn btn-exit" onClick={handleCheckOut} style={{ padding: '8px 20px', fontSize: 14 }}>
+                      퇴실
+                    </button>
+                  )}
+                  <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
+                </div>
               </div>
-
-              {/* 입실 중인 내 상태 */}
-              {isCheckedIn && (
-                <div className="my-status">
-                  <div className="my-status-info">
-                    {photoURL && <img className="user-bar-avatar" src={photoURL} alt="" referrerPolicy="no-referrer" />}
-                    <span>{displayName} — 작업 중</span>
-                  </div>
-                  <div className="my-status-timer">{formatDuration(elapsed)}</div>
-                </div>
-              )}
-
-              {/* 입실/퇴실 버튼 */}
-              {!isCheckedIn ? (
-                <button
-                  className="btn btn-enter"
-                  onClick={handleCheckIn}
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    fontSize: '16px',
-                    background: 'linear-gradient(135deg, var(--brown), var(--brown-dark))',
-                  }}
-                >
-                  ☕ 입실하기
-                </button>
-              ) : (
-                <div className="checkin-form">
-                  <button className="btn btn-exit" onClick={handleCheckOut} style={{ flex: 1 }}>
-                    퇴실하기
-                  </button>
-                </div>
-              )}
             </div>
           )}
 
