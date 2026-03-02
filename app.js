@@ -243,7 +243,17 @@ function App() {
         nickname: name, photoURL: photo, enteredAt: now, autoExitKey: autoExitRef.key
       }));
 
-      showToast(`${name}님, 환영합니다 ☕`);
+      const greetings = [
+        `${name}님, 오늘도 좋은 작업 시간 되세요 ☕`,
+        `${name}님, 오늘 계획한 작업 잘 마무리되길 응원해요 ✨`,
+        `${name}님, 함께 하는 오늘도 화이팅이에요 ☕`,
+        `${name}님, 차 한 잔과 함께 좋은 시작이에요 ☕`,
+        `${name}님, 오늘도 좋은 하루 만들어가요 ✨`,
+        `${name}님, 같이 작업하니 든든하네요 ☕`,
+        `${name}님, 하나씩 해내는 오늘이 되길 응원해요 ✨`,
+        `${name}님, 오늘도 차분하게 시작해봐요 ☕`,
+      ];
+      showToast(greetings[Math.floor(Math.random() * greetings.length)]);
       window.open(MEET_LINK, '_blank', 'width=900,height=600,noopener,noreferrer');
 
       db.ref('workspace/log').push({
