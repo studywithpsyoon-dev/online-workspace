@@ -1,0 +1,5 @@
+.DS_Store
+node_modules/
+*.docx
+*.log
+firebase-setup-guide.md
