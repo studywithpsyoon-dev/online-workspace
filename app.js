@@ -118,36 +118,53 @@ function App() {
   const displayName = user ? user.displayName : '';
   const photoURL = user ? user.photoURL : '';
 
-  // 새로고침 시 입실 상태 복원
+  // 입실 상태 복원 (새로고침: sessionStorage / 다른 기기: Firebase 조회)
   useEffect(() => {
     if (authLoading || !user || !db) return;
     const saved = sessionStorage.getItem('checkInData');
-    if (!saved) return;
-    try {
-      const data = JSON.parse(saved);
-      const ref = db.ref('workspace/currentMembers');
-      const newRef = ref.push();
-      newRef.onDisconnect().remove();
-      newRef.set({ nickname: data.nickname, photoURL: data.photoURL || '', enteredAt: data.enteredAt }).then(() => {
-        setMyKey(newRef.key);
-        setEnteredAt(data.enteredAt);
-        setIsCheckedIn(true);
-        const autoExitRef = db.ref('workspace/log').push();
-        autoExitRef.onDisconnect().set({
-          nickname: data.nickname,
-          photoURL: data.photoURL || '',
-          action: 'exit',
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+    if (saved) {
+      // 새로고침 복원
+      try {
+        const data = JSON.parse(saved);
+        const ref = db.ref('workspace/currentMembers');
+        const newRef = ref.push();
+        newRef.onDisconnect().remove();
+        newRef.set({ nickname: data.nickname, photoURL: data.photoURL || '', enteredAt: data.enteredAt }).then(() => {
+          setMyKey(newRef.key);
+          setEnteredAt(data.enteredAt);
+          setIsCheckedIn(true);
+          const autoExitRef = db.ref('workspace/log').push();
+          autoExitRef.onDisconnect().set({
+            nickname: data.nickname,
+            photoURL: data.photoURL || '',
+            action: 'exit',
+            timestamp: firebase.database.ServerValue.TIMESTAMP
+          });
+          setExitLogRef(autoExitRef);
+          if (data.autoExitKey) {
+            db.ref(`workspace/log/${data.autoExitKey}`).remove();
+          }
+          sessionStorage.setItem('checkInData', JSON.stringify({
+            ...data, autoExitKey: autoExitRef.key
+          }));
         });
-        setExitLogRef(autoExitRef);
-        if (data.autoExitKey) {
-          db.ref(`workspace/log/${data.autoExitKey}`).remove();
+      } catch (e) { sessionStorage.removeItem('checkInData'); }
+    } else {
+      // 다른 기기에서 로그인 시 Firebase에서 기존 입실 확인
+      db.ref('workspace/currentMembers').once('value', snap => {
+        const data = snap.val() || {};
+        const found = Object.entries(data).find(([, val]) => val.nickname === user.displayName);
+        if (found) {
+          const [key, val] = found;
+          setMyKey(key);
+          setEnteredAt(val.enteredAt);
+          setIsCheckedIn(true);
+          sessionStorage.setItem('checkInData', JSON.stringify({
+            nickname: val.nickname, photoURL: val.photoURL || '', enteredAt: val.enteredAt
+          }));
         }
-        sessionStorage.setItem('checkInData', JSON.stringify({
-          ...data, autoExitKey: autoExitRef.key
-        }));
       });
-    } catch (e) { sessionStorage.removeItem('checkInData'); }
+    }
   }, [authLoading, user]);
 
   // Google 로그인 (popup 시도 → 실패 시 redirect로 전환)
