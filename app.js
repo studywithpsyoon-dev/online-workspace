@@ -149,13 +149,18 @@ function App() {
     } catch (e) { sessionStorage.removeItem('checkInData'); }
   }, [authLoading, user]);
 
-  // Google 로그인
+  // Google 로그인 (모바일/태블릿은 redirect, 데스크탑은 popup)
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const handleGoogleLogin = useCallback(() => {
     if (!auth) return;
-    auth.signInWithPopup(googleProvider).catch(err => {
-      console.error(err);
-      showToast('로그인에 실패했습니다');
-    });
+    if (isMobile) {
+      auth.signInWithRedirect(googleProvider);
+    } else {
+      auth.signInWithPopup(googleProvider).catch(err => {
+        console.error(err);
+        showToast('로그인에 실패했습니다');
+      });
+    }
   }, []);
 
   // 로그아웃
