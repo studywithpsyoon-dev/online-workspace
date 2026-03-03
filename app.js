@@ -214,7 +214,14 @@ function App() {
         }
       });
       list.sort((a, b) => b.timestamp - a.timestamp);
-      setLogs(list);
+      // 같은 사용자의 동일 액션이 60초 이내에 중복되면 제거
+      const deduped = list.filter((log, i) => {
+        if (i === 0) return true;
+        const prev = list.find((l, j) => j < i && l.nickname === log.nickname && l.action === log.action);
+        if (prev && Math.abs(prev.timestamp - log.timestamp) < 60000) return false;
+        return true;
+      });
+      setLogs(deduped);
     });
     return () => ref.off('value', handler);
   }, [user]);
