@@ -104,9 +104,10 @@ function App() {
   const toastKey = useRef(0);
   const timerRef = useRef(null);
 
-  // Google Auth 상태 리스너
+  // Google Auth 상태 리스너 + redirect 결과 처리
   useEffect(() => {
     if (!auth) { setAuthLoading(false); return; }
+    auth.getRedirectResult().catch(err => console.error('Redirect error:', err));
     const unsubscribe = auth.onAuthStateChanged((u) => {
       setUser(u);
       setAuthLoading(false);
