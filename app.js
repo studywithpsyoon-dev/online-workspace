@@ -432,7 +432,10 @@ function App() {
                     </div>
                   )}
                   <div>
-                    <span style={{ fontSize: 13, color: 'var(--text-light)' }}>
+                    <span className="member-nickname" style={{ fontSize: 14 }}>
+                      선생님
+                    </span>
+                    <span style={{ fontSize: 13, color: 'var(--text-light)', marginLeft: 6 }}>
                       {log.action === 'enter' ? '입실' : '퇴실'}
                     </span>
                   </div>
