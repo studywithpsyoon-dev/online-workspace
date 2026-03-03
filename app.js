@@ -53,6 +53,17 @@ function formatTime(ts) {
   return `${period} ${h12}:${m}`;
 }
 
+function formatDateTime(ts) {
+  const d = new Date(ts);
+  const mon = d.getMonth() + 1;
+  const day = d.getDate();
+  const h = d.getHours();
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const period = h < 12 ? '오전' : '오후';
+  const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
+  return `${mon}/${day} ${period} ${h12}:${m}`;
+}
+
 function getAvatarEmoji(name) {
   const emojis = ['🧑‍💻','👩‍💻','📖','✏️','🎧','☕','🌿','📚','💡','🖊️','🎨','🔬'];
   let hash = 0;
@@ -440,7 +451,7 @@ function App() {
                     </span>
                   </div>
                 </div>
-                <span className="member-time" style={{ fontSize: 12 }}>{formatTime(log.timestamp)}</span>
+                <span className="member-time" style={{ fontSize: 12 }}>{formatDateTime(log.timestamp)}</span>
               </li>
             ))}
           </ul>
