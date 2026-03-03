@@ -103,6 +103,8 @@ function App() {
   const [logs, setLogs] = useState([]);
   const toastKey = useRef(0);
   const timerRef = useRef(null);
+  const myKeyRef = useRef(null);
+  useEffect(() => { myKeyRef.current = myKey; }, [myKey]);
 
   // Google Auth 상태 리스너 + redirect 결과 처리
   useEffect(() => {
@@ -183,7 +185,7 @@ function App() {
     if (auth) auth.signOut();
   }, [isCheckedIn]);
 
-  // 실시간 멤버 리스너
+  // 실시간 멤버 리스너 + 다른 기기에서 퇴실 감지
   useEffect(() => {
     if (!db) return;
     const ref = db.ref('workspace/currentMembers');
@@ -194,6 +196,13 @@ function App() {
       }));
       list.sort((a, b) => a.enteredAt - b.enteredAt);
       setMembers(list);
+      // 내 항목이 사라졌으면 퇴실 상태로 전환
+      if (myKeyRef.current && !data[myKeyRef.current]) {
+        setIsCheckedIn(false);
+        setMyKey(null);
+        setEnteredAt(null);
+        sessionStorage.removeItem('checkInData');
+      }
     });
     return () => ref.off('value', handler);
   }, []);
