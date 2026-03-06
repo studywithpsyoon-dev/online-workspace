@@ -11,8 +11,8 @@ const FIREBASE_CONFIG = {
   appId:             "1:334115125119:web:e83bd82d1fa4ba44f10c4a"
 };
 
+const JAAS_APP_ID = "vpaas-magic-cookie-f0b9d2a7770a4a0e920e6b043e885edd";
 const JITSI_ROOM = "24hr-online-workplace-cpk-2026";
-const JITSI_URL = `https://meet.jit.si/${JITSI_ROOM}`;
 
 const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 
@@ -106,6 +106,8 @@ function App() {
   const toastKey = useRef(0);
   const timerRef = useRef(null);
   const myKeyRef = useRef(null);
+  const jitsiApiRef = useRef(null);
+  const jitsiContainerRef = useRef(null);
   useEffect(() => { myKeyRef.current = myKey; }, [myKey]);
 
   // Google Auth 상태 리스너 + redirect 결과 처리
@@ -238,6 +240,40 @@ function App() {
     });
     return () => ref.off('value', handler);
   }, [user]);
+
+  // Jitsi 화상회의 관리
+  useEffect(() => {
+    if (showJitsi && isCheckedIn && jitsiContainerRef.current && !jitsiApiRef.current) {
+      // JitsiMeetExternalAPI가 로드될 때까지 대기
+      const initJitsi = () => {
+        if (typeof JitsiMeetExternalAPI === 'undefined') {
+          setTimeout(initJitsi, 300);
+          return;
+        }
+        jitsiApiRef.current = new JitsiMeetExternalAPI("8x8.vc", {
+          roomName: `${JAAS_APP_ID}/${JITSI_ROOM}`,
+          parentNode: jitsiContainerRef.current,
+          userInfo: {
+            displayName: displayName || '참여자'
+          },
+          configOverrides: {
+            startWithAudioMuted: true,
+            disableModeratorIndicator: true,
+            enableEmailInStats: false
+          },
+          interfaceConfigOverrides: {
+            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true
+          }
+        });
+      };
+      initJitsi();
+    }
+    // showJitsi가 false가 되면(퇴실) API 정리
+    if (!isCheckedIn && jitsiApiRef.current) {
+      jitsiApiRef.current.dispose();
+      jitsiApiRef.current = null;
+    }
+  }, [showJitsi, isCheckedIn, displayName]);
 
   // 타이머
   useEffect(() => {
@@ -463,13 +499,11 @@ function App() {
             >
               {showJitsi ? '🔽 화상회의 접기' : '🎥 화상회의 열기'}
             </button>
-            <div className="jitsi-container" style={{ display: showJitsi ? 'block' : 'none' }}>
-              <iframe
-                src={`${JITSI_URL}#userInfo.displayName="${encodeURIComponent(displayName)}"`}
-                allow="camera; microphone; display-capture; autoplay; fullscreen"
-                className="jitsi-iframe"
-              ></iframe>
-            </div>
+            <div
+              className="jitsi-container"
+              style={{ display: showJitsi ? 'block' : 'none' }}
+              ref={jitsiContainerRef}
+            ></div>
           </div>
         )}
       </section>

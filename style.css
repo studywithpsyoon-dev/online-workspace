@@ -187,7 +187,7 @@ body {
   border: 1px solid rgba(139, 115, 85, 0.1);
 }
 
-.jitsi-iframe {
+.jitsi-container iframe {
   width: 100%;
   height: 480px;
   border: none;
@@ -195,7 +195,7 @@ body {
 }
 
 @media (max-width: 480px) {
-  .jitsi-iframe { height: 320px; }
+  .jitsi-container iframe { height: 320px; }
 }
 
 /* ========== MEMBER LIST ========== */
