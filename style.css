@@ -178,6 +178,26 @@ body {
 
 .btn-meet:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 
+/* ========== JITSI EMBED ========== */
+.jitsi-container {
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(139, 115, 85, 0.1);
+}
+
+.jitsi-iframe {
+  width: 100%;
+  height: 480px;
+  border: none;
+  display: block;
+}
+
+@media (max-width: 480px) {
+  .jitsi-iframe { height: 320px; }
+}
+
 /* ========== MEMBER LIST ========== */
 .member-list {
   list-style: none;

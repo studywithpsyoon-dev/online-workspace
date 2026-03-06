@@ -11,7 +11,8 @@ const FIREBASE_CONFIG = {
   appId:             "1:334115125119:web:e83bd82d1fa4ba44f10c4a"
 };
 
-const MEET_LINK = "https://meet.google.com/mxu-wiqe-xtg";
+const JITSI_ROOM = "24hr-online-workplace-cpk-2026";
+const JITSI_URL = `https://meet.jit.si/${JITSI_ROOM}`;
 
 const IS_FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
 
@@ -101,6 +102,7 @@ function App() {
   const [elapsed, setElapsed] = useState(0);
   const [toast, setToast] = useState('');
   const [logs, setLogs] = useState([]);
+  const [showJitsi, setShowJitsi] = useState(false);
   const toastKey = useRef(0);
   const timerRef = useRef(null);
   const myKeyRef = useRef(null);
@@ -135,6 +137,7 @@ function App() {
           setMyKey(newRef.key);
           setEnteredAt(data.enteredAt);
           setIsCheckedIn(true);
+          setShowJitsi(true);
           const autoExitRef = db.ref('workspace/log').push();
           autoExitRef.onDisconnect().set({
             nickname: data.nickname,
@@ -161,6 +164,7 @@ function App() {
           setMyKey(key);
           setEnteredAt(val.enteredAt);
           setIsCheckedIn(true);
+          setShowJitsi(true);
           sessionStorage.setItem('checkInData', JSON.stringify({
             nickname: val.nickname, photoURL: val.photoURL || '', enteredAt: val.enteredAt
           }));
@@ -300,7 +304,7 @@ function App() {
         `${name}님, 오늘도 차분하게 시작해봐요 ☕`,
       ];
       showToast(greetings[Math.floor(Math.random() * greetings.length)]);
-      window.open(MEET_LINK, '_blank', 'width=900,height=600,noopener,noreferrer');
+      setShowJitsi(true);
 
       db.ref('workspace/log').push({
         nickname: name,
@@ -341,6 +345,7 @@ function App() {
       });
 
       setIsCheckedIn(false);
+      setShowJitsi(false);
       setMyKey(null);
       setEnteredAt(null);
       sessionStorage.removeItem('checkInData');
@@ -448,11 +453,26 @@ function App() {
           )
         ) : null}
 
-        {/* Meet 다시 열기 (입실 중일 때만) */}
+        {/* Jitsi 화상회의 (입실 중일 때) */}
         {isCheckedIn && (
-          <a className="btn-meet" href={MEET_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: 14, padding: '12px', background: 'var(--brown-light)', opacity: 0.85 }}>
-            🎥 Google Meet 다시 열기
-          </a>
+          <div>
+            <button
+              className="btn-meet"
+              onClick={() => setShowJitsi(prev => !prev)}
+              style={{ fontSize: 14, padding: '12px', background: showJitsi ? 'var(--brown-light)' : undefined, opacity: showJitsi ? 0.85 : 1 }}
+            >
+              {showJitsi ? '🔽 화상회의 접기' : '🎥 화상회의 열기'}
+            </button>
+            {showJitsi && (
+              <div className="jitsi-container">
+                <iframe
+                  src={`${JITSI_URL}#userInfo.displayName="${encodeURIComponent(displayName)}"`}
+                  allow="camera; microphone; display-capture; autoplay; fullscreen"
+                  className="jitsi-iframe"
+                ></iframe>
+              </div>
+            )}
+          </div>
         )}
       </section>
 
@@ -510,7 +530,7 @@ function App() {
           </li>
           <li className="info-item">
             <span className="bullet">•</span>
-            <span>Meet 설정 → <strong>'아무도 없는 통화에서 나가기'</strong> 꺼주세요</span>
+            <span>화상회의는 페이지 내에서 바로 참여할 수 있어요 (별도 설치 불필요)</span>
           </li>
         </ul>
       </section>
