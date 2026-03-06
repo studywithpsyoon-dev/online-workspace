@@ -463,15 +463,13 @@ function App() {
             >
               {showJitsi ? '🔽 화상회의 접기' : '🎥 화상회의 열기'}
             </button>
-            {showJitsi && (
-              <div className="jitsi-container">
-                <iframe
-                  src={`${JITSI_URL}#userInfo.displayName="${encodeURIComponent(displayName)}"`}
-                  allow="camera; microphone; display-capture; autoplay; fullscreen"
-                  className="jitsi-iframe"
-                ></iframe>
-              </div>
-            )}
+            <div className="jitsi-container" style={{ display: showJitsi ? 'block' : 'none' }}>
+              <iframe
+                src={`${JITSI_URL}#userInfo.displayName="${encodeURIComponent(displayName)}"`}
+                allow="camera; microphone; display-capture; autoplay; fullscreen"
+                className="jitsi-iframe"
+              ></iframe>
+            </div>
           </div>
         )}
       </section>
