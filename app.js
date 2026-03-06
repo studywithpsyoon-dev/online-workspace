@@ -257,8 +257,8 @@ function App() {
             displayName: displayName || '참여자'
           },
           configOverrides: {
-            startWithAudioMuted: false,
-            startWithVideoMuted: false,
+            startWithAudioMuted: true,
+            startWithVideoMuted: true,
             prejoinConfig: { enabled: false },
             disableModeratorIndicator: true,
             enableEmailInStats: false,
