@@ -258,11 +258,20 @@ function App() {
           },
           configOverrides: {
             startWithAudioMuted: true,
+            prejoinConfig: { enabled: false },
             disableModeratorIndicator: true,
-            enableEmailInStats: false
+            enableEmailInStats: false,
+            notifications: [],
+            disableThirdPartyRequests: true
           },
           interfaceConfigOverrides: {
-            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true
+            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+            SHOW_JITSI_WATERMARK: false,
+            SHOW_WATERMARK_FOR_GUESTS: false,
+            TOOLBAR_BUTTONS: [
+              'microphone', 'camera', 'desktop', 'chat',
+              'raisehand', 'tileview', 'hangup', 'settings'
+            ]
           }
         });
       };
