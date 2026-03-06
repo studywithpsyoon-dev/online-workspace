@@ -260,6 +260,8 @@ function App() {
             startWithAudioMuted: true,
             startWithVideoMuted: true,
             prejoinConfig: { enabled: false },
+            prejoinPageEnabled: false,
+            enableInsecureRoomNameWarning: false,
             disableModeratorIndicator: true,
             enableEmailInStats: false,
             notifications: [],
