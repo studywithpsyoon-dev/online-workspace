@@ -270,7 +270,9 @@ function App() {
             localRecording: { disable: true },
             recordingService: { enabled: false },
             liveStreaming: { enabled: false },
-            transcription: { enabled: false }
+            transcription: { enabled: false },
+            hideRecordingLabel: true,
+            disableRecordingWarning: true
           },
           interfaceConfigOverrides: {
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
@@ -282,6 +284,17 @@ function App() {
               'raisehand', 'tileview', 'hangup', 'settings',
               'select-background'
             ]
+          }
+        });
+        // 녹화 경고 문구 숨기기
+        jitsiApiRef.current.addEventListener('videoConferenceJoined', () => {
+          const iframe = jitsiContainerRef.current?.querySelector('iframe');
+          if (iframe) {
+            try {
+              const style = iframe.contentDocument.createElement('style');
+              style.textContent = '.oFlRl, [class*="recording-label"], [class*="oFlRl"] { display: none !important; }';
+              iframe.contentDocument.head.appendChild(style);
+            } catch(e) { /* cross-origin 제한 시 무시 */ }
           }
         });
       };
