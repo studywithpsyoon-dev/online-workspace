@@ -135,7 +135,7 @@ function App() {
         const ref = db.ref('workspace/currentMembers');
         const newRef = ref.push();
         newRef.onDisconnect().remove();
-        newRef.set({ nickname: data.nickname, photoURL: data.photoURL || '', enteredAt: data.enteredAt }).then(() => {
+        newRef.set({ uid: user.uid, nickname: data.nickname, photoURL: data.photoURL || '', enteredAt: data.enteredAt }).then(() => {
           setMyKey(newRef.key);
           setEnteredAt(data.enteredAt);
           setIsCheckedIn(true);
@@ -160,7 +160,7 @@ function App() {
       // 다른 기기에서 로그인 시 Firebase에서 기존 입실 확인
       db.ref('workspace/currentMembers').once('value', snap => {
         const data = snap.val() || {};
-        const found = Object.entries(data).find(([, val]) => val.nickname === user.displayName);
+        const found = Object.entries(data).find(([, val]) => val.uid === user.uid);
         if (found) {
           const [key, val] = found;
           setMyKey(key);
@@ -342,7 +342,7 @@ function App() {
     const newRef = ref.push();
     const now = Date.now();
     const photo = photoURL || '';
-    const data = { nickname: name, photoURL: photo, enteredAt: now };
+    const data = { uid: user.uid, nickname: name, photoURL: photo, enteredAt: now };
 
     newRef.onDisconnect().remove();
 
