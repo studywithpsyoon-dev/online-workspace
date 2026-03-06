@@ -256,7 +256,7 @@ function App() {
           userInfo: {
             displayName: displayName || '참여자'
           },
-          configOverrides: {
+          configOverwrite: {
             startWithAudioMuted: true,
             startWithVideoMuted: true,
             prejoinConfig: { enabled: false },
@@ -277,7 +277,7 @@ function App() {
             hideRecordingLabel: true,
             disableRecordingWarning: true
           },
-          interfaceConfigOverrides: {
+          interfaceConfigOverwrite: {
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
             SHOW_JITSI_WATERMARK: false,
             SHOW_WATERMARK_FOR_GUESTS: false,
