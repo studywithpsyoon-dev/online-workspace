@@ -593,6 +593,10 @@ function App() {
             <span className="bullet">•</span>
             <span>화상회의는 페이지 내에서 바로 참여할 수 있어요 (별도 설치 불필요)</span>
           </li>
+          <li className="info-item">
+            <span className="bullet">•</span>
+            <span>회의 입장 시 녹화 관련 안내가 표시되지만, <strong>녹화 기능은 비활성화</strong>되어 있으니 안심하세요</span>
+          </li>
         </ul>
       </section>
 
