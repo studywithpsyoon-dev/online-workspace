@@ -69,7 +69,7 @@ body {
   background: #fff;
   border-radius: var(--radius);
   padding: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(139, 115, 85, 0.06);
 }
@@ -294,9 +294,9 @@ body {
 .two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
   align-items: start;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
 }
 
 .two-col .card {
