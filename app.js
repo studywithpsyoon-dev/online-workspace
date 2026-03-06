@@ -420,19 +420,13 @@ function App() {
         </div>
       )}
 
-      {/* 실시간 현황 카드 */}
+      {/* ① 로그인 / 입퇴실 카드 */}
       <section className="card">
-        <div className="card-title">
-          <span className="icon">📡</span>
-          실시간 현황
-        </div>
-
         <div className="status-bar">
           <span className={`status-dot ${members.length > 0 ? 'active' : ''}`}></span>
           <span>현재 <span className="member-count">{members.length}</span>명 접속 중</span>
         </div>
 
-        {/* 로그인 안 된 상태 */}
         {authLoading ? (
           <div className="auth-section">
             <span style={{ color: 'var(--text-light)', fontSize: 14 }}>로딩 중...</span>
@@ -448,33 +442,54 @@ function App() {
             </button>
           </div>
         ) : (
-          <div>
-            {/* 로그인 사용자 + 입실/퇴실 */}
-            <div className="user-bar">
-              <div className="user-bar-info">
-                {photoURL && <img className="user-bar-avatar" src={photoURL} alt="" referrerPolicy="no-referrer" />}
-                <span style={{ fontWeight: 500 }}>{displayName}</span>
-                {isCheckedIn && <span style={{ fontSize: 12, color: 'var(--green-dark)' }}>작업 중 {formatDuration(elapsed)}</span>}
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {!isCheckedIn ? (
-                  <button className="btn btn-enter" onClick={handleCheckIn} style={{ padding: '8px 20px', fontSize: 14 }}>
-                    ☕ 입실
-                  </button>
-                ) : (
-                  <button className="btn btn-exit" onClick={handleCheckOut} style={{ padding: '8px 20px', fontSize: 14 }}>
-                    퇴실
-                  </button>
-                )}
-                <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
-              </div>
+          <div className="user-bar">
+            <div className="user-bar-info">
+              {photoURL && <img className="user-bar-avatar" src={photoURL} alt="" referrerPolicy="no-referrer" />}
+              <span style={{ fontWeight: 500 }}>{displayName}</span>
+              {isCheckedIn && <span style={{ fontSize: 12, color: 'var(--green-dark)' }}>작업 중 {formatDuration(elapsed)}</span>}
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {!isCheckedIn ? (
+                <button className="btn btn-enter" onClick={handleCheckIn} style={{ padding: '8px 20px', fontSize: 14 }}>
+                  ☕ 입실
+                </button>
+              ) : (
+                <button className="btn btn-exit" onClick={handleCheckOut} style={{ padding: '8px 20px', fontSize: 14 }}>
+                  퇴실
+                </button>
+              )}
+              <button className="btn-logout" onClick={handleLogout}>로그아웃</button>
             </div>
           </div>
         )}
+      </section>
 
-        {/* 접속자 목록 (로그인한 사용자만 볼 수 있음) */}
-        {user ? (
-          members.length > 0 ? (
+      {/* ② 화상회의 카드 (입실 중일 때) */}
+      {isCheckedIn && (
+        <section className="card" style={{ padding: showJitsi ? '20px 20px 0' : undefined }}>
+          <button
+            className="btn-meet"
+            onClick={() => setShowJitsi(prev => !prev)}
+            style={{ fontSize: 14, padding: '12px', marginTop: 0 }}
+          >
+            {showJitsi ? '🔽 화상회의 접기' : '🎥 화상회의 열기'}
+          </button>
+          <div
+            className="jitsi-container"
+            style={{ display: showJitsi ? 'block' : 'none' }}
+            ref={jitsiContainerRef}
+          ></div>
+        </section>
+      )}
+
+      {/* ③ 접속자 목록 카드 (로그인한 사용자만) */}
+      {user && (
+        <section className="card">
+          <div className="card-title">
+            <span className="icon">👥</span>
+            접속자 목록
+          </div>
+          {members.length > 0 ? (
             <ul className="member-list">
               {members.map(m => (
                 <li key={m.key} className="member-item">
@@ -500,27 +515,9 @@ function App() {
               <span className="icon">🌙</span>
               아직 아무도 없어요. 첫 번째 입실자가 되어보세요!
             </div>
-          )
-        ) : null}
-
-        {/* Jitsi 화상회의 (입실 중일 때) */}
-        {isCheckedIn && (
-          <div>
-            <button
-              className="btn-meet"
-              onClick={() => setShowJitsi(prev => !prev)}
-              style={{ fontSize: 14, padding: '12px', background: showJitsi ? 'var(--brown-light)' : undefined, opacity: showJitsi ? 0.85 : 1 }}
-            >
-              {showJitsi ? '🔽 화상회의 접기' : '🎥 화상회의 열기'}
-            </button>
-            <div
-              className="jitsi-container"
-              style={{ display: showJitsi ? 'block' : 'none' }}
-              ref={jitsiContainerRef}
-            ></div>
-          </div>
-        )}
-      </section>
+          )}
+        </section>
+      )}
 
       {/* 입퇴실 기록 */}
       {logs.length > 0 && (
