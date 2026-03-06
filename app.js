@@ -262,15 +262,20 @@ function App() {
             disableModeratorIndicator: true,
             enableEmailInStats: false,
             notifications: [],
-            disableThirdPartyRequests: true
+            disableThirdPartyRequests: true,
+            disableScreensharingVirtualBackground: false,
+            backgroundAlpha: 0.5,
+            defaultLanguage: 'ko'
           },
           interfaceConfigOverrides: {
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
             SHOW_JITSI_WATERMARK: false,
             SHOW_WATERMARK_FOR_GUESTS: false,
+            DEFAULT_BACKGROUND: '#000000',
             TOOLBAR_BUTTONS: [
-              'microphone', 'camera', 'desktop', 'chat',
-              'raisehand', 'tileview', 'hangup', 'settings'
+              'microphone', 'camera', 'chat',
+              'raisehand', 'tileview', 'hangup', 'settings',
+              'select-background'
             ]
           }
         });
