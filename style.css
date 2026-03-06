@@ -181,6 +181,7 @@ body {
 /* ========== JITSI EMBED ========== */
 .jitsi-container {
   margin-top: 12px;
+  margin-bottom: 20px;
   border-radius: var(--radius-sm);
   overflow: hidden;
   box-shadow: var(--shadow-md);
