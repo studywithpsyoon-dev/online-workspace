@@ -487,78 +487,82 @@ function App() {
         </section>
       )}
 
-      {/* ③ 접속자 목록 카드 (로그인한 사용자만) */}
+      {/* ③ 접속자 목록 + 입퇴실 기록 (2열) */}
       {user && (
-        <section className="card">
-          <div className="card-title">
-            <span className="icon">👥</span>
-            접속자 목록
-          </div>
-          {members.length > 0 ? (
-            <ul className="member-list">
-              {members.map(m => (
-                <li key={m.key} className="member-item">
-                  <div className="member-info">
-                    {m.photoURL ? (
-                      <img className="user-bar-avatar" src={m.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 32, height: 32 }} />
-                    ) : (
-                      <div className="member-avatar">{getAvatarEmoji(m.nickname)}</div>
-                    )}
-                    <div>
-                      <div className="member-nickname">
-                        {m.nickname} {m.key === myKey && <span style={{ fontSize: 11, color: 'var(--orange)' }}>(나)</span>}
-                      </div>
-                      <div className="member-time">{formatTime(m.enteredAt)} 입실</div>
-                    </div>
-                  </div>
-                  <MemberDuration enteredAt={m.enteredAt} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="empty-state">
-              <span className="icon">🌙</span>
-              아직 아무도 없어요. 첫 번째 입실자가 되어보세요!
+        <div className="two-col">
+          <section className="card">
+            <div className="card-title">
+              <span className="icon">👥</span>
+              현재 작업 중인 선생님
             </div>
-          )}
-        </section>
-      )}
-
-      {/* 입퇴실 기록 */}
-      {logs.length > 0 && (
-        <section className="card">
-          <div className="card-title">
-            <span className="icon">📝</span>
-            입퇴실 기록
-          </div>
-          <ul className="member-list" style={{ maxHeight: '210px', overflowY: 'auto' }}>
-            {logs.map(log => (
-              <li key={log.key} className="member-item" style={{ padding: '10px 16px' }}>
-                <div className="member-info">
-                  {log.photoURL ? (
-                    <img className="user-bar-avatar" src={log.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 28, height: 28 }} />
-                  ) : (
-                    <div className="member-avatar" style={{
-                      width: 28, height: 28, fontSize: 12,
-                      background: log.action === 'enter' ? 'var(--green-soft)' : 'var(--orange-soft)'
-                    }}>
-                      {log.action === 'enter' ? '🟢' : '👋'}
+            {members.length > 0 ? (
+              <ul className="member-list">
+                {members.map(m => (
+                  <li key={m.key} className="member-item">
+                    <div className="member-info">
+                      {m.photoURL ? (
+                        <img className="user-bar-avatar" src={m.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 28, height: 28 }} />
+                      ) : (
+                        <div className="member-avatar" style={{ width: 28, height: 28, fontSize: 12 }}>{getAvatarEmoji(m.nickname)}</div>
+                      )}
+                      <div>
+                        <div className="member-nickname">
+                          {m.nickname} {m.key === myKey && <span style={{ fontSize: 11, color: 'var(--orange)' }}>(나)</span>}
+                        </div>
+                        <div className="member-time">{formatTime(m.enteredAt)} 입실</div>
+                      </div>
                     </div>
-                  )}
-                  <div>
-                    <span className="member-nickname" style={{ fontSize: 14 }}>
-                      선생님
-                    </span>
-                    <span style={{ fontSize: 13, color: 'var(--text-light)', marginLeft: 6 }}>
-                      {log.action === 'enter' ? '입실' : '퇴실'}
-                    </span>
-                  </div>
-                </div>
-                <span className="member-time" style={{ fontSize: 12 }}>{formatDateTime(log.timestamp)}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+                    <MemberDuration enteredAt={m.enteredAt} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="empty-state">
+                <span className="icon">🌙</span>
+                아직 아무도 없어요
+              </div>
+            )}
+          </section>
+
+          <section className="card">
+            <div className="card-title">
+              <span className="icon">📝</span>
+              입퇴실 기록
+            </div>
+            {logs.length > 0 ? (
+              <ul className="member-list" style={{ maxHeight: '240px', overflowY: 'auto' }}>
+                {logs.map(log => (
+                  <li key={log.key} className="member-item" style={{ padding: '8px 12px' }}>
+                    <div className="member-info">
+                      {log.photoURL ? (
+                        <img className="user-bar-avatar" src={log.photoURL} alt="" referrerPolicy="no-referrer" style={{ width: 24, height: 24 }} />
+                      ) : (
+                        <div className="member-avatar" style={{
+                          width: 24, height: 24, fontSize: 10,
+                          background: log.action === 'enter' ? 'var(--green-soft)' : 'var(--orange-soft)'
+                        }}>
+                          {log.action === 'enter' ? '🟢' : '👋'}
+                        </div>
+                      )}
+                      <div>
+                        <span className="member-nickname" style={{ fontSize: 13 }}>선생님</span>
+                        <span style={{ fontSize: 12, color: 'var(--text-light)', marginLeft: 4 }}>
+                          {log.action === 'enter' ? '입실' : '퇴실'}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="member-time" style={{ fontSize: 11 }}>{formatDateTime(log.timestamp)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="empty-state">
+                <span className="icon">📝</span>
+                기록이 없어요
+              </div>
+            )}
+          </section>
+        </div>
       )}
 
       {/* 안내 */}
