@@ -35,31 +35,31 @@ body {
 .container {
   max-width: 720px;
   margin: 0 auto;
-  padding: 24px 20px 60px;
+  padding: 16px 20px 48px;
 }
 
 /* ========== HEADER ========== */
 .header {
   text-align: center;
-  padding: 48px 0 32px;
+  padding: 24px 0 16px;
 }
 
 .header-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
+  font-size: 32px;
+  margin-bottom: 6px;
   display: block;
 }
 
 .header h1 {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--brown-dark);
   letter-spacing: -0.5px;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .header .subtitle {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--text-secondary);
   font-weight: 400;
 }
@@ -68,36 +68,36 @@ body {
 .card {
   background: #fff;
   border-radius: var(--radius);
-  padding: 28px;
-  margin-bottom: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
   box-shadow: var(--shadow-sm);
   border: 1px solid rgba(139, 115, 85, 0.06);
 }
 
 .card-title {
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--brown-dark);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .card-title .icon {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 /* ========== STATUS PANEL ========== */
 .status-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
+  gap: 8px;
+  padding: 10px 16px;
   background: var(--beige);
   border-radius: var(--radius-sm);
-  margin-bottom: 20px;
-  font-size: 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
   color: var(--text-secondary);
 }
 
@@ -162,10 +162,10 @@ body {
   justify-content: center;
   gap: 8px;
   width: 100%;
-  padding: 16px;
+  padding: 12px;
   background: linear-gradient(135deg, var(--green-dark), #5a8a52);
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   border-radius: var(--radius-sm);
   text-decoration: none;
   font-weight: 600;
@@ -173,7 +173,7 @@ body {
   transition: all 0.2s;
   border: none;
   cursor: pointer;
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 .btn-meet:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
@@ -208,11 +208,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
   background: var(--cream);
-  margin-bottom: 8px;
-  font-size: 14px;
+  margin-bottom: 6px;
+  font-size: 13px;
   animation: fadeIn 0.3s ease;
 }
 
@@ -258,12 +258,12 @@ body {
 
 .empty-state {
   text-align: center;
-  padding: 32px 20px;
+  padding: 20px 16px;
   color: var(--text-light);
-  font-size: 14px;
+  font-size: 13px;
 }
 
-.empty-state .icon { font-size: 32px; margin-bottom: 8px; display: block; }
+.empty-state .icon { font-size: 24px; margin-bottom: 4px; display: block; }
 
 /* ========== INFO SECTION ========== */
 .info-list {
@@ -271,14 +271,14 @@ body {
 }
 
 .info-item {
-  padding: 10px 0;
+  padding: 7px 0;
   border-bottom: 1px solid var(--beige);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  line-height: 1.6;
+  gap: 8px;
+  line-height: 1.5;
 }
 
 .info-item:last-child { border-bottom: none; }
@@ -293,8 +293,8 @@ body {
 /* ========== FOOTER ========== */
 .footer {
   text-align: center;
-  padding: 32px 0 16px;
-  font-size: 13px;
+  padding: 20px 0 8px;
+  font-size: 12px;
   color: var(--text-light);
 }
 
@@ -336,7 +336,7 @@ body {
 /* ========== AUTH ========== */
 .auth-section {
   text-align: center;
-  padding: 20px;
+  padding: 12px;
 }
 
 .btn-google {
@@ -370,11 +370,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: var(--cream);
   border-radius: var(--radius-sm);
-  margin-bottom: 16px;
-  font-size: 14px;
+  margin-bottom: 0;
+  font-size: 13px;
 }
 
 .user-bar-info {
@@ -409,11 +409,11 @@ body {
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 480px) {
-  .container { padding: 16px 16px 48px; }
-  .card { padding: 20px; }
-  .header { padding: 32px 0 24px; }
-  .header h1 { font-size: 22px; }
-  .user-bar { flex-direction: column; gap: 10px; align-items: stretch; }
+  .container { padding: 12px 14px 40px; }
+  .card { padding: 16px; }
+  .header { padding: 16px 0 12px; }
+  .header h1 { font-size: 18px; }
+  .user-bar { flex-direction: column; gap: 8px; align-items: stretch; }
   .user-bar-info { justify-content: center; }
   .user-bar > div:last-child { display: flex; justify-content: center; gap: 8px; }
 }

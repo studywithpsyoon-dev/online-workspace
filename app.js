@@ -570,10 +570,6 @@ function App() {
         <ul className="info-list">
           <li className="info-item">
             <span className="bullet">•</span>
-            <span>본명 노출이 부담되면 <strong>구글 계정에서 이름 변경</strong> 후 참여</span>
-          </li>
-          <li className="info-item">
-            <span className="bullet">•</span>
             <span>마이크 <strong>음소거</strong> 기본, 카메라는 자유 (책상/키보드 정도)</span>
           </li>
           <li className="info-item">
