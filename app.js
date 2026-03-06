@@ -265,7 +265,12 @@ function App() {
             disableThirdPartyRequests: true,
             disableScreensharingVirtualBackground: false,
             backgroundAlpha: 0.5,
-            defaultLanguage: 'ko'
+            defaultLanguage: 'ko',
+            disableRecordAudioNotification: true,
+            localRecording: { disable: true },
+            recordingService: { enabled: false },
+            liveStreaming: { enabled: false },
+            transcription: { enabled: false }
           },
           interfaceConfigOverrides: {
             DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
