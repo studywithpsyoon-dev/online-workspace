@@ -258,7 +258,7 @@ function App() {
           },
           configOverrides: {
             startWithAudioMuted: true,
-            prejoinConfig: { enabled: false },
+            prejoinConfig: { enabled: true },
             disableModeratorIndicator: true,
             enableEmailInStats: false,
             notifications: [],
